@@ -65,7 +65,7 @@ class Fighter{
 
 	draw(){
 		 c.fillStyle = this.color	
-		 c.fillRect(this.position.x , this.position.y, this.image.width, this.image.height)
+		 c.fillRect(this.position.x , this.position.y, this.width, this.height)
 		 // attack box
 		 if(this.isAttacking){
 		 c.fillStyle = 'green'
