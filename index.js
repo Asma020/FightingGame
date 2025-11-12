@@ -66,6 +66,14 @@ const player = new Fighter({
 		attack1: {
 			imageSrc: './img/samuraiMack/Attack1.png',
 			framesMax: 6,
+	},
+		takeHit: {
+			imageSrc: './img/samuraiMack/Take Hit - white silhouette.png',
+			framesMax: 4,
+	},
+		death: {
+			imageSrc: './img/samuraiMack/Death.png',
+			framesMax: 6,
 	}
   },
   attackBox: {
@@ -120,6 +128,14 @@ const enemy = new Fighter({
 		attack1: {
 			imageSrc: './img/kenji/Attack1.png',
 			framesMax: 4
+	},
+	takeHit: {
+		imageSrc: './img/kenji/Take hit.png',
+		framesMax: 3
+	},
+		death: {
+			imageSrc: './img/kenji/Death.png',
+			framesMax: 7,
 	}
   },
   attackBox: {
@@ -201,7 +217,7 @@ function animate(){
 		enemy.switchSprite('fall')
 	}
 
-	// detect for collision
+	// detect for collision & denemy gets hit
 	if( 
 		rectangularCollision({
 		rectangule1: player,
@@ -210,8 +226,8 @@ function animate(){
 	 player.isAttacking && 
 	 player.framesCurrent === 4
 	 ) {
+		enemy.takeHit()
 	 	player.isAttacking = false
-		enemy.health -= 20
 		document.querySelector('#enemyHealth').style.width = enemy.health + '%'
 	}
 
@@ -219,7 +235,7 @@ function animate(){
 	if ( player.isAttacking && player.framesCurrent === 4 ) {
 		player.isAttacking = false
 	}
-
+    // this is where our player gets hit 
 	if( 
 		rectangularCollision({
 		rectangule1: enemy,
@@ -228,8 +244,8 @@ function animate(){
 	 enemy.isAttacking && 
 	 enemy.framesCurrent === 2
 	 ){
+		player.takeHit()
 	 	enemy.isAttacking = false
-		player.health -= 20
 		document.querySelector('#playerHealth').style.width = player.health + '%'
 	}
 
@@ -246,7 +262,8 @@ function animate(){
 animate()
 
 window.addEventListener('keydown', (event) => {
-	// console.log(event.key)
+	if (!player.dead){
+
 	switch (event.key) {
 		case 'd' :
 			keys.d.pressed = true
@@ -262,7 +279,10 @@ window.addEventListener('keydown', (event) => {
 		case ' ' :
 			player.attack()
 			break
-		
+	}	
+	}
+	if (!enemy.dead) {
+	switch(event.key){
 		case 'ArrowRight' :
 			keys.ArrowRight.pressed = true
 			enemy.lastKey = 'ArrowRight'
@@ -277,6 +297,7 @@ window.addEventListener('keydown', (event) => {
 		case 'ArrowDown' :
 			enemy.attack()
 			break
+	}
 	}
 	// console.log(event.key)
 })
